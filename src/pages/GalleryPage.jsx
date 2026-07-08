@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import { X, ZoomIn } from "lucide-react";
@@ -76,8 +76,34 @@ function Lightbox({ img, onClose, onPrev, onNext }) {
 
 
 // ─── Gallery Page ─────────────────────────────────────────────────────────────
+// Custom hook to determine active column count for masonry distribution
+function useMasonryColumns() {
+  const getColumnCount = () => {
+    if (typeof window === "undefined") return 2;
+    const width = window.innerWidth;
+    if (width >= 1024) return 4;
+    if (width >= 640) return 3;
+    return 2;
+  };
+
+  const [columns, setColumns] = useState(getColumnCount);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newCols = getColumnCount();
+      setColumns((prev) => (prev !== newCols ? newCols : prev));
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return columns;
+}
+
+// ─── Gallery Page ─────────────────────────────────────────────────────────────
 export default function GalleryPage() {
   const [lightboxIdx, setLightboxIdx] = useState(null);
+  const columns = useMasonryColumns();
 
   const openLightbox = useCallback((idx) => setLightboxIdx(idx), []);
   const closeLightbox = useCallback(() => setLightboxIdx(null), []);
@@ -90,8 +116,13 @@ export default function GalleryPage() {
     []
   );
 
-  // 2 cols on mobile, 3 on md, 4 on lg — handled via responsive render
-  // We compute three column sets statically; CSS grid gap handles spacing
+  // Distribute images round-robin into columns statically in JS.
+  // This locks items to their respective columns, preventing them from
+  // jumping/shuffling between columns as they load asynchronously.
+  const columnsData = Array.from({ length: columns }, () => []);
+  fullGallery.forEach((img, idx) => {
+    columnsData[idx % columns].push({ img, idx });
+  });
 
   return (
     <>
@@ -149,18 +180,19 @@ export default function GalleryPage() {
       {/* ── Masonry Gallery Grid ── */}
       <section className="py-10 bg-stone-50" aria-label="Photo gallery">
         <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-8">
-          {/*
-            CSS columns masonry: images flow top-to-bottom, no bottom gaps ever.
-            2 cols mobile → 3 cols tablet → 4 cols desktop
-          */}
-          <style>{`
-            .masonry-grid { columns: 2; column-gap: 10px; }
-            @media (min-width: 640px)  { .masonry-grid { columns: 3; } }
-            @media (min-width: 1024px) { .masonry-grid { columns: 4; } }
-          `}</style>
-          <div className="masonry-grid">
-            {fullGallery.map((img, idx) => (
-              <GalleryCard key={img.id} img={img} idx={idx} onOpen={openLightbox} masonry />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+            {columnsData.map((columnItems, colIdx) => (
+              <div key={colIdx} className="flex flex-col gap-2.5">
+                {columnItems.map(({ img, idx }) => (
+                  <GalleryCard
+                    key={img.id}
+                    img={img}
+                    idx={idx}
+                    onOpen={openLightbox}
+                    masonry
+                  />
+                ))}
+              </div>
             ))}
           </div>
         </div>
@@ -188,8 +220,7 @@ function GalleryCard({ img, idx, onOpen, masonry = false }) {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.05 }}
       transition={{ duration: 0.4, delay: (idx % 8) * 0.03 }}
-      style={{ breakInside: "avoid" }}
-      className="relative group overflow-hidden rounded-xl cursor-pointer bg-stone-200 mb-2.5"
+      className="relative group overflow-hidden rounded-xl cursor-pointer bg-stone-200 w-full"
       onClick={() => onOpen(idx)}
       role="button"
       tabIndex={0}
