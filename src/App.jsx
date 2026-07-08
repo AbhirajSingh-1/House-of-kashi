@@ -1,29 +1,17 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider }    from "react-helmet-async";
-import { useEffect, lazy, Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 import Navbar      from "./components/Navbar";
 import Footer      from "./components/Footer";
 
-// Lazy load pages for faster initial load
-const HomePage = lazy(() => import("./pages/HomePage"));
-const GalleryPage = lazy(() => import("./pages/GalleryPage"));
-const ServicesPage = lazy(() => import("./pages/ServicesPage"));
-const AboutPage = lazy(() => import("./pages/AboutPage"));
-const ContactPage = lazy(() => import("./pages/ContactPage"));
-
-// Loading component
-function PageLoader() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-rose-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-stone-600 font-[Poppins]">Loading...</p>
-      </div>
-    </div>
-  );
-}
+// Import pages statically to eliminate loading delays and spinners entirely
+import HomePage     from "./pages/HomePage";
+import GalleryPage  from "./pages/GalleryPage";
+import ServicesPage from "./pages/ServicesPage";
+import AboutPage    from "./pages/AboutPage";
+import ContactPage  from "./pages/ContactPage";
 
 // ── Scroll to top on route change + handle hash anchors ──────────────────────
 function ScrollToTop() {
@@ -31,15 +19,13 @@ function ScrollToTop() {
   
   useEffect(() => {
     if (hash) {
-      // If there's a hash, scroll to that element after a short delay
       setTimeout(() => {
         const element = document.getElementById(hash.substring(1));
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          element.scrollIntoView({ behavior: "instant", block: "start" });
         }
-      }, 100);
+      }, 50);
     } else {
-      // Otherwise scroll to top
       window.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [pathname, hash]);
@@ -47,59 +33,30 @@ function ScrollToTop() {
   return null;
 }
 
-// ── Scroll to top on page load/reload ─────────────────────────────────────────
-function ScrollToTopOnLoad() {
-  useEffect(() => {
-    // Scroll to top immediately on component mount (page load/reload)
-    window.scrollTo(0, 0);
-  }, []);
-  
-  return null;
-}
-
-// ── Page transition wrapper ───────────────────────────────────────────────────
-const pageVariants = {
-  initial:  { opacity: 0, y: 12 },
-  animate:  { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-  exit:     { opacity: 0, y: -12, transition: { duration: 0.25 } },
-};
-
-function AnimatedRoutes() {
+function MainRoutes() {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        variants={pageVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        <Suspense fallback={<PageLoader />}>
-          <Routes location={location}>
-            <Route path="/"        element={<HomePage    />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/about"   element={<AboutPage   />} />
-            <Route path="/contact" element={<ContactPage />} />
-            {/* 404 fallback */}
-            <Route
-              path="*"
-              element={
-                <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50 text-center px-4 pt-24">
-                  <p className="text-8xl font-bold text-stone-100 font-[Poppins] select-none mb-4">404</p>
-                  <h1 className="text-2xl font-semibold text-stone-800 font-[Poppins] mb-3">Page Not Found</h1>
-                  <p className="text-stone-500 font-[Poppins] mb-8">The page you're looking for doesn't exist.</p>
-                  <a href="/" className="px-8 py-3.5 bg-rose-600 text-white rounded-full text-sm font-semibold font-[Poppins] hover:bg-rose-700 transition-colors">
-                    Go Home
-                  </a>
-                </div>
-              }
-            />
-          </Routes>
-        </Suspense>
-      </motion.div>
-    </AnimatePresence>
+    <Routes location={location}>
+      <Route path="/"        element={<HomePage    />} />
+      <Route path="/gallery" element={<GalleryPage />} />
+      <Route path="/services" element={<ServicesPage />} />
+      <Route path="/about"   element={<AboutPage   />} />
+      <Route path="/contact" element={<ContactPage />} />
+      {/* 404 fallback */}
+      <Route
+        path="*"
+        element={
+          <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50 text-center px-4 pt-24">
+            <p className="text-8xl font-bold text-stone-100 font-[Poppins] select-none mb-4">404</p>
+            <h1 className="text-2xl font-semibold text-stone-800 font-[Poppins] mb-3">Page Not Found</h1>
+            <p className="text-stone-500 font-[Poppins] mb-8">The page you're looking for doesn't exist.</p>
+            <a href="/" className="px-8 py-3.5 bg-rose-600 text-white rounded-full text-sm font-semibold font-[Poppins] hover:bg-rose-700 transition-colors">
+              Go Home
+            </a>
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 
@@ -131,11 +88,10 @@ export default function App() {
     <HelmetProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <ScrollToTopOnLoad />
         <div className="flex flex-col min-h-screen font-[Poppins] bg-white text-stone-800 antialiased">
           <Navbar />
           <main className="flex-1">
-            <AnimatedRoutes />
+            <MainRoutes />
           </main>
           <Footer />
           <WhatsAppFAB />

@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { heroSlides } from "../data/siteData";
 
-const AUTOPLAY_INTERVAL = 4000;
+const AUTOPLAY_INTERVAL = 3500;
 
 // Slide variants: ONLY x-axis translation — zero opacity changes = no white flash
 const makeSlideVariants = (dir) => ({
@@ -16,8 +16,6 @@ const makeSlideVariants = (dir) => ({
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [isPaused, setIsPaused] = useState(false);
-  const intervalRef = useRef(null);
   const total = heroSlides.length;
 
   const goTo = useCallback(
@@ -43,21 +41,15 @@ export default function HeroSlider() {
     prevImg.src = heroSlides[prevIndex].image;
   }, [current, total]);
 
+  // Steady 2-second autoplay loop (functional update avoids timer resets)
   useEffect(() => {
-    if (isPaused) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      return;
-    }
-    
-    intervalRef.current = setInterval(next, AUTOPLAY_INTERVAL);
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [next, isPaused]);
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrent((prev) => (prev + 1) % total);
+    }, AUTOPLAY_INTERVAL);
+
+    return () => clearInterval(timer);
+  }, [total]);
 
   const slide = heroSlides[current];
 
@@ -66,8 +58,6 @@ export default function HeroSlider() {
       className="relative w-full overflow-hidden bg-black"
       style={{ height: "100svh", minHeight: "600px" }}
       aria-label="Hero image slider"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
     >
       {/* ── Slides ── */}
       <AnimatePresence initial={false} custom={direction} mode="sync">

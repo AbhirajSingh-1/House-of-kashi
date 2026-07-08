@@ -60,7 +60,7 @@ import extra6 from "../assets/pexels-david-pastory-1377991555-37302297.webp";
 import extra7 from "../assets/pexels-dheeraj-mishra-1145808582-30367537.webp";
 import extra8 from "../assets/pexels-framesbyambro-13414815.webp";
 import extra9 from "../assets/pexels-justinagyarko-34260120.webp";
-import extra10 from "../assets/pexels-lpfstudio023-26558848.webp";
+import extra10 from "../assets/pexels-al-almin-29953878.webp";
 import extra11 from "../assets/pexels-phoenix-casino-2078566487-35975731.webp";
 import extra12 from "../assets/pexels-premsinghtanwar-24778434.webp";
 import extra13 from "../assets/pexels-reiez-35042249.webp";
@@ -212,18 +212,18 @@ export const fullGallery = [
   { id: 47, src: extra12,   alt: "Wedding ring shot",         category: "Details",     tags: ["details"] },
   { id: 48, src: extra15,   alt: "Wedding detail",            category: "Details",     tags: ["details"] },
   // ── More Wedding & Couple Images ───────────────────────────────────────────
-  { id: 49, src: extra10,   alt: "Wedding celebration",       category: "Wedding",     tags: ["ceremony"] },
-  { id: 50, src: couple2,   alt: "Romantic couple",           category: "Couple",      tags: ["couple"] },
-  { id: 51, src: couple3,   alt: "Elegant couple portrait",   category: "Couple",      tags: ["couple"] },
-  { id: 52, src: couple5,   alt: "Wedding vows moment",       category: "Ceremony",    tags: ["ceremony"] },
-  { id: 53, src: couple7,   alt: "Pre-wedding couple",        category: "Pre-Wedding", tags: ["couple"] },
-  { id: 54, src: gallery2,  alt: "Beautiful bridal shot",     category: "Portrait",    tags: ["bridal"] },
-  { id: 55, src: gallery4,  alt: "Wedding moment",            category: "Wedding",     tags: ["ceremony"] },
-  { id: 56, src: gallery6,  alt: "Romantic wedding",          category: "Couple",      tags: ["couple"] },
-  { id: 57, src: gallery10, alt: "Bridal elegance",           category: "Portrait",    tags: ["bridal"] },
-  { id: 58, src: extra18,   alt: "Candid celebration",        category: "Candid",      tags: ["candid"] },
-  { id: 59, src: couple6,   alt: "Wedding reception joy",     category: "Reception",   tags: ["reception"] },
-  { id: 60, src: gallery8,  alt: "Traditional wedding",       category: "Wedding",     tags: ["ceremony"] },
+  { id: 49, src: extra10,   alt: "Sacred wedding moment",     category: "Wedding",     tags: ["ceremony"] },
+  { id: 50, src: gallery3,  alt: "Reception elegance",        category: "Reception",   tags: ["reception"] },
+  { id: 51, src: gallery5,  alt: "Couple portrait outdoor",   category: "Portrait",    tags: ["portrait"] },
+  { id: 52, src: gallery8,  alt: "Traditional wedding ritual",category: "Wedding",     tags: ["ceremony"] },
+  { id: 53, src: gallery12, alt: "Wedding portrait glow",     category: "Portrait",    tags: ["bridal"] },
+  { id: 54, src: extra3,    alt: "Festive wedding joy",       category: "Reception",   tags: ["reception"] },
+  { id: 55, src: extra9,    alt: "Celebration moment",        category: "Reception",   tags: ["reception"] },
+  { id: 56, src: extra4,    alt: "Elegant portrait shot",     category: "Portrait",    tags: ["portrait"] },
+  { id: 57, src: extra14,   alt: "Bride portrait close-up",   category: "Portrait",    tags: ["bridal"] },
+  { id: 58, src: extra21,   alt: "Fine art wedding shot",     category: "Portrait",    tags: ["portrait"] },
+  { id: 59, src: couple3,   alt: "Elegant couple walk",       category: "Couple",      tags: ["couple"] },
+  { id: 60, src: couple6,   alt: "Couple wedding reception",  category: "Reception",   tags: ["reception"] },
 ];
 
 

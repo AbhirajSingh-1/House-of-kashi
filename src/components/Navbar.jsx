@@ -155,10 +155,16 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) =>
                 link.children ? (
-                  <div key={link.label} className="relative" ref={dropRef}>
+                  <div
+                    key={link.label}
+                    className="relative py-2"
+                    ref={dropRef}
+                    onMouseEnter={() => setDropOpen(true)}
+                    onMouseLeave={() => setDropOpen(false)}
+                  >
                     <button
                       onClick={() => setDropOpen((p) => !p)}
-                      className={`flex items-center gap-1 text-sm font-medium tracking-wide uppercase transition-colors duration-200 font-[Poppins] cursor-pointer ${
+                      className={`flex items-center gap-1 text-sm font-medium tracking-wide uppercase transition-colors duration-200 font-[Poppins] cursor-pointer focus:outline-none focus:ring-0 select-none ${
                         scrolled || !isHero
                           ? "text-stone-600 hover:text-rose-600"
                           : "text-white/90 hover:text-white"

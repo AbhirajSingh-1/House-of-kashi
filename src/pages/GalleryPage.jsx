@@ -73,13 +73,7 @@ function Lightbox({ img, onClose, onPrev, onNext }) {
   );
 }
 
-// ─── Masonry Column ───────────────────────────────────────────────────────────
-// Splits images into N columns for a true masonry effect
-function splitIntoColumns(items, cols) {
-  const columns = Array.from({ length: cols }, () => []);
-  items.forEach((item, i) => columns[i % cols].push({ item, idx: i }));
-  return columns;
-}
+
 
 // ─── Gallery Page ─────────────────────────────────────────────────────────────
 export default function GalleryPage() {
@@ -155,33 +149,23 @@ export default function GalleryPage() {
       {/* ── Masonry Gallery Grid ── */}
       <section className="py-10 bg-stone-50" aria-label="Photo gallery">
         <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-8">
-
-          {/* Mobile: 2 columns */}
-          <div className="grid grid-cols-2 gap-2.5 sm:hidden">
+          {/*
+            CSS columns masonry: images flow top-to-bottom, no bottom gaps ever.
+            2 cols mobile → 3 cols tablet → 4 cols desktop
+          */}
+          <style>{`
+            .masonry-grid { columns: 2; column-gap: 10px; }
+            @media (min-width: 640px)  { .masonry-grid { columns: 3; } }
+            @media (min-width: 1024px) { .masonry-grid { columns: 4; } }
+          `}</style>
+          <div className="masonry-grid">
             {fullGallery.map((img, idx) => (
-              <GalleryCard key={img.id} img={img} idx={idx} onOpen={openLightbox} />
-            ))}
-          </div>
-
-          {/* Tablet: 3 columns */}
-          <div className="hidden sm:grid lg:hidden grid-cols-3 gap-3">
-            {fullGallery.map((img, idx) => (
-              <GalleryCard key={img.id} img={img} idx={idx} onOpen={openLightbox} />
-            ))}
-          </div>
-
-          {/* Desktop: 4 columns masonry */}
-          <div className="hidden lg:flex gap-3">
-            {splitIntoColumns(fullGallery, 4).map((col, colIdx) => (
-              <div key={colIdx} className="flex-1 flex flex-col gap-3">
-                {col.map(({ item, idx }) => (
-                  <GalleryCard key={item.id} img={item} idx={idx} onOpen={openLightbox} masonry />
-                ))}
-              </div>
+              <GalleryCard key={img.id} img={img} idx={idx} onOpen={openLightbox} masonry />
             ))}
           </div>
         </div>
       </section>
+
 
       {/* ── Lightbox ── */}
       {lightboxIdx !== null && (
@@ -204,14 +188,15 @@ function GalleryCard({ img, idx, onOpen, masonry = false }) {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.05 }}
       transition={{ duration: 0.4, delay: (idx % 8) * 0.03 }}
-      className="relative group overflow-hidden rounded-xl cursor-pointer bg-stone-200"
+      style={{ breakInside: "avoid" }}
+      className="relative group overflow-hidden rounded-xl cursor-pointer bg-stone-200 mb-2.5"
       onClick={() => onOpen(idx)}
       role="button"
       tabIndex={0}
       aria-label={`View ${img.alt}`}
       onKeyDown={(e) => e.key === "Enter" && onOpen(idx)}
     >
-      {/* In masonry mode height is natural; in grid mode use fixed aspect */}
+      {/* masonry = natural height; grid = fixed aspect */}
       <div className={masonry ? "w-full" : "aspect-[4/3] overflow-hidden"}>
         <img
           src={img.src}

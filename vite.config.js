@@ -11,11 +11,6 @@ export default defineConfig({
     // Optimize build output
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Split vendor code
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'motion-vendor': ['framer-motion'],
-        },
         // Better asset names with hash for caching
         assetFileNames: (assetInfo) => {
           if (assetInfo.name && assetInfo.name.match(/\.(webp|jpg|jpeg|png|gif|svg)$/)) {
@@ -27,14 +22,6 @@ export default defineConfig({
     },
     // Increase chunk size warning limit
     chunkSizeWarningLimit: 1000,
-    // Minify output
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.logs in production
-        drop_debugger: true,
-      },
-    },
   },
   // Optimize dependencies
   optimizeDeps: {
