@@ -324,13 +324,18 @@ export default function Navbar() {
                   >
                     {link.children ? (
                       <div>
-                        <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest px-3 pt-4 pb-1">
+                        <Link
+                          to={link.to}
+                          onClick={() => setMobileOpen(false)}
+                          className="block text-xs font-semibold text-stone-400 uppercase tracking-widest px-3 pt-4 pb-1 hover:text-rose-600 transition-colors font-[Poppins]"
+                        >
                           {link.label}
-                        </p>
+                        </Link>
                         {link.children.map((child) => (
                           <Link
                             key={child.label}
                             to={child.to}
+                            onClick={() => setMobileOpen(false)}
                             className="block px-3 py-2.5 text-stone-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors font-[Poppins] text-sm"
                           >
                             {child.label}
@@ -341,6 +346,7 @@ export default function Navbar() {
                       <NavLink
                         to={link.to}
                         end={link.to === "/"}
+                        onClick={() => setMobileOpen(false)}
                         className={({ isActive }) =>
                           `flex items-center px-3 py-3 rounded-lg text-sm font-medium font-[Poppins] transition-colors ${
                             isActive

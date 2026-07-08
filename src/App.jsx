@@ -88,9 +88,9 @@ export default function App() {
     <HelmetProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <div className="flex flex-col min-h-screen font-[Poppins] bg-white text-stone-800 antialiased">
+        <div className="flex flex-col min-h-screen font-[Poppins] bg-white text-stone-800 antialiased overflow-x-hidden w-full">
           <Navbar />
-          <main className="flex-1">
+          <main className="flex-1 overflow-x-hidden w-full">
             <MainRoutes />
           </main>
           <Footer />

@@ -26,3 +26,16 @@ img[loading="lazy"] {
 @media (min-width: 640px)  { .masonry-grid { columns: 3; } }
 @media (min-width: 1024px) { .masonry-grid { columns: 4; } }
 
+/* ── Prevent horizontal overflow ── */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+#root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+
